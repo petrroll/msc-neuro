@@ -113,3 +113,6 @@ _templates
 # IDE
 .idea
 .vscode/*
+
+# Data (at least for now)
+Data/
