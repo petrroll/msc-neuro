@@ -102,3 +102,14 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# custom:
+_build
+_static
+_templates
+*.m~
+.DS*
+
+# IDE
+.idea
+.vscode/*
