@@ -116,3 +116,6 @@ _templates
 
 # Data (at least for now)
 Data/
+
+# TF logs
+logs/
