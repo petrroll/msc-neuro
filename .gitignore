@@ -119,3 +119,6 @@ Data/
 
 # TF logs
 logs/
+
+# ENV Activate proxy
+/activate
