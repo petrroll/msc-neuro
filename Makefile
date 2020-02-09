@@ -11,8 +11,8 @@ $(VENV_NAME): requirements.txt activate
 	@test -d $(VENV_NAME) || $(PYTHON_GLOBAL) -m venv $(VENV_NAME)
 	$(PYTHON) -m pip install -r requirements.txt
 
-.PHONY: req-dev
-req-dev: requirements-dev.txt $(VENV_NAME)
+.PHONY: $(VENV_NAME)-dev
+$(VENV_NAME)-dev: requirements-dev.txt $(VENV_NAME)
 	$(PYTHON) -m pip install -r requirements-dev.txt
 
 # Cleanup
