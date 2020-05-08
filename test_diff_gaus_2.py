@@ -3,6 +3,11 @@ import NDN3.NDNutils as NDNutils
 import NDN3.NDN as NDN
 from datetime import datetime
 
+# It's not meant to be a proper test, it's just a verification playground. 
+# If we decide to test the NDN library (technical challenges, cost/benefit)
+# it will be done in a more comprehensive and correct way, not with 
+# this kind of hacked script. 
+
 inp = np.ones((128, 15*15))
 out = np.ones((128, 20))
 

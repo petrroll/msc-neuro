@@ -3,7 +3,12 @@ import NDN3.NDNutils as NDNutils
 import NDN3.NDN as NDN
 from datetime import datetime
 
-inp = np.ones((1, 10*20))
+# It's not meant to be a proper test, it's just a verification playground. 
+# If we decide to test the NDN library (technical challenges, cost/benefit)
+# it will be done in a more comprehensive and correct way, not with 
+# this kind of hacked script. 
+
+inp = np.reshape([x for x in range(10*20)], [1, 10*20])
 out = np.ones((1, 4))
 
 def get_hsm_params(input, output, hls=40):
@@ -44,20 +49,10 @@ def train_network(train_input, train_output,
     test_indxs = np.array(range(train_len, train_len + test_len)) if test_len > 0 else None
     
     hsm = NDN.NDN(hsm_params, noise_dist='poisson')
-    #hsm.networks[0].layers[0].weights = np.array([
-    #    [1,1,1,1],[1,2,3,8],[1,2,3,8],[1,2,3,4],
-    #    [0.5,0.7,0.5,0.5],[1,3,5,7],[1,2,1,8],[1,2,3,4]
-    #    ], np.float32)
-    # hsm.train(
-    #     input_data=input, 
-    #     output_data=output, 
-    #     train_indxs=train_indxs, 
-    #     test_indxs=test_indxs, 
-    #     data_filters=data_filters,
-    #     learning_alg=larg, 
-    #     opt_params=opt_params, 
-    #     output_dir=f"logs/{time_str}"
-    # )
+    hsm.networks[0].layers[0].weights = np.array([
+        [1,1,1,1],[1,2,3,8],[1,2,3,8],[1,2,3,4],
+        [0.5,0.7,0.5,0.5],[1,3,5,7],[1,2,1,8],[1,2,3,4]
+        ], np.float32)
     
     return hsm
 
@@ -73,4 +68,33 @@ hsm = train_network(
 pred = hsm.generate_prediction(inp)
 print(pred)
 
+# manual creation of diff of gaussian in numpy
+xSize = 10
+ySize = 20
+
+xCoords = np.array(range(xSize))
+yCoords = np.array(range(ySize))
+
+X, Y = np.meshgrid(xCoords, yCoords)
+X = np.expand_dims(X, 2)
+Y = np.expand_dims(Y, 2)
+
+alpha =  np.reshape(np.array([1,1,1,1]), [1, 1, 4])
+gama = np.reshape(np.array([1,2,3,8]), [1, 1, 4])
+ux = np.reshape(np.array([1,2,3,8]), [1, 1, 4])
+uy = np.reshape(np.array([1,2,3,4]), [1, 1, 4])
+
+diff_mask = (alpha/(gama ** 2)) * np.exp(-((X - ux) ** 2 + (Y - uy) ** 2) / (2*(gama ** 2)))
+
+alpha =  np.reshape(np.array([0.5,0.7,0.5,0.5]), [1, 1, 4])
+gama = np.reshape(np.array([1,3,5,7]), [1, 1, 4])
+ux = np.reshape(np.array([1,2,1,8]), [1, 1, 4])
+uy = np.reshape(np.array([1,2,3,4]), [1, 1, 4])
+
+diff_mask = diff_mask - (alpha/(gama ** 2)) * np.exp(-((X - ux) ** 2 + (Y - uy) ** 2) / (2*(gama ** 2)))
+res = np.multiply(diff_mask, np.reshape(inp, (20, 10, 1)))
+res = np.sum(res, (0, 1))
+print(res)
+
+print(np.squeeze(pred)-res)
 
