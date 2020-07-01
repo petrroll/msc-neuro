@@ -89,6 +89,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+linEnv/
 
 # Spyder project settings
 .spyderproject
@@ -122,3 +123,8 @@ logs/
 
 # ENV Activate proxy
 /activate
+
+*[Ll]ogs/
+*[Ll]og/
+
+[Mm]odels/
