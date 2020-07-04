@@ -1,5 +1,5 @@
 import numpy as np
-from utils.analysis import get_correlation
+import utils.analysis as uan
 
 from IPython.display import display, Image
 
@@ -19,7 +19,7 @@ def evaluate_all(hsm, input, golden, data_filters=None):
     result = hsm.generate_prediction(input)
     result = np.multiply(result, data_filters)
     
-    corr = get_correlation(result, golden, data_filters)
+    corr = uan.get_correlation(result, golden, data_filters)
     corr[np.isnan(corr)] = 0
     print_stat_matrix("Corr", corr)
     
@@ -47,7 +47,7 @@ def evaluate_output_neuron(result, golden, corr):
 def evaluate_best_corr_neuron(result, golden, data_filters=None):
     data_filters = data_filters if data_filters is not None else np.ones(golden.shape)
     
-    corr = get_correlation(result, golden, data_filters)
+    corr = uan.get_correlation(result, golden, data_filters)
     corr[np.isnan(corr)] = 0
     
     i = np.nanargmax(corr)
