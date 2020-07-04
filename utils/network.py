@@ -6,7 +6,6 @@ import NDN3.NDN as NDN
 
 from datetime import datetime
 
-SEED = 0
 def get_network(train_input, train_output, 
                   larg, opt_params, hsm_params, noise_dist='poisson',
                   test_input = None, test_output = None, 
