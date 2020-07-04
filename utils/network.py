@@ -8,11 +8,11 @@ from datetime import datetime
 
 SEED = 0
 def get_network(train_input, train_output, 
-                  larg, opt_params, hsm_params, 
+                  larg, opt_params, hsm_params, noise_dist='poisson',
                   test_input = None, test_output = None, 
                   train_data_filters=None, test_data_filters=None,
-                  custom_name = None, seed=0,
-                  noise_dist='poisson'):
+                  custom_name = None, 
+                  seed=0):
 
     # The seeds within NDN are applied only on ._build_graph which happens after weights get initialized
     # ..need to set it now -> when NDN gets created -> weight get initiated as part of ._define_network
@@ -42,17 +42,16 @@ def get_network(train_input, train_output,
     return hsm, (input, output, train_indxs, test_indxs, data_filters, larg, opt_params, name_str)
 
 def train_network(train_input, train_output, 
-                  larg, opt_params, hsm_params, 
+                  larg, opt_params, hsm_params, noise_dist='poisson',
                   test_input = None, test_output = None, 
                   train_data_filters=None, test_data_filters=None,
-                  custom_name = None, seed=0,
-                  noise_dist='poisson', logdir='logs'):
-    hsm, (input, output, train_indxs, test_indxs, data_filters, larg, opt_params, name_str) = get_network(train_input, train_output, 
-                  larg, opt_params, hsm_params, 
+                  custom_name = None, seed=0, logdir='logs'):
+    hsm, (input, output, train_indxs, test_indxs, data_filters, larg, opt_params, name_str) = get_network(
+                  train_input, train_output, 
+                  larg, opt_params, hsm_params, noise_dist,
                   test_input, test_output, 
                   train_data_filters, test_data_filters,
-                  custom_name, seed, 
-                  noise_dist)
+                  custom_name, seed)
     hsm.train(
         input_data=input, 
         output_data=output, 
@@ -64,3 +63,9 @@ def train_network(train_input, train_output,
         output_dir=f"logs/{logdir}/{name_str}"
     )
     return hsm
+
+def load_network(path, seed):
+    np.random.seed(seed)
+    tf.set_random_seed(seed)
+
+    return NDN.NDN.load_model(path)

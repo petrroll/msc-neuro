@@ -9,7 +9,7 @@ def get_correlation(a, b, mask=None):
         scipy.stats.pearsonr(
             a[mask[:, i]==1,i], 
             b[mask[:, i]==1,i]
-        )[0] 
+        )[0] if np.sum(mask[:, i]) > 0 else 0
         for i 
         in range(a.shape[1])
     ])
