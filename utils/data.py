@@ -40,14 +40,22 @@ def merge_data_and_get_mask(inputs, outputs):
         startD = endD
     return merged_inputs, merged_outputs, merged_outputs_mask
 
-def load_data_multiple(indexes, dta_type, input_processor=None):
+def load_data_multiple(indexes, dta_type, input_processor=None, output_processor=None):
     dta_input = []
     dta_output = []
     for i in indexes:
         input_tr, output_tr = load_data(dta_type, i)
-        input_tr_processed = input_tr if input_processor is None else input_processor(input_tr)
-        
-        dta_input.append(input_tr_processed)
+
+        input_tr = input_tr if input_processor is None else input_processor(input_tr)
+        output_tr = output_tr if output_processor is None else output_processor(output_tr)
+
+        dta_input.append(input_tr)
         dta_output.append(output_tr)
     
     return merge_data_and_get_mask(dta_input, dta_output)
+
+def normalize_mean_std(dta):
+    return (dta - np.mean(dta)) / np.std(dta)
+
+def normalize_std(dta):
+    return dta / np.std(dta)

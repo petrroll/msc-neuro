@@ -54,3 +54,5 @@ def evaluate_best_corr_neuron(result, golden, data_filters=None):
     mask = data_filters[:,i] == 1 
     evaluate_output_neuron(result[mask, i], golden[mask, i], corr[i])
 
+def print_summary_stats(dta):
+    print(f"Min/Max:{np.min(dta)}/{np.max(dta)} Mean/Median:{np.mean(dta)}/{np.median(dta)} Std:{np.std(dta)}")
