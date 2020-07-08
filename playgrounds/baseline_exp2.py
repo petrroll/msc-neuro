@@ -25,6 +25,8 @@ import utils.analysis_present as uasp
 # 1
 #
 name = 'baselineshort_exp21_1normIms_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
+exp_folder = "experiments_1"
+
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
     _, input_shape = input.shape
@@ -82,15 +84,17 @@ for i in range(10):
         data_filters=data_filters,
         learning_alg=larg, 
         opt_params=opt_params, 
-        output_dir=f"logs/experiments_1/{name_str}" 
+        output_dir=f"logs/{exp_folder}/{name_str}" 
     )
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-    hsm.save_model(f"./models/{name}/{name}__{i}.mod")
+    hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
 
 #
 # 1
 #
 name = 'baselineshort_exp22_1normImsOs_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
+exp_folder = "experiments_1"
+
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
     _, input_shape = input.shape
@@ -148,7 +152,7 @@ for i in range(10):
         data_filters=data_filters,
         learning_alg=larg, 
         opt_params=opt_params, 
-        output_dir=f"logs/experiments_1/{name_str}" 
+        output_dir=f"logs/{exp_folder}/{name_str}" 
     )
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-    hsm.save_model(f"./models/{name}/{name}__{i}.mod")
+    hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
