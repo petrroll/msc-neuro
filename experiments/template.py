@@ -85,4 +85,4 @@ for i in range(50):
         output_dir=f"logs/{exp_folder}/{name_str}" 
     )
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-    hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
+    hsm.save_model(f"./models/{exp_folder}/{name}/{name_str}.ndnmod")
