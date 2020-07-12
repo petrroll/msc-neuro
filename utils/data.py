@@ -59,3 +59,61 @@ def normalize_mean_std(dta):
 
 def normalize_std(dta):
     return dta / np.std(dta)
+
+import tensorflow as tf
+import os
+
+def get_tag_values(file_path, tag_name):
+    '''
+    Return value of a specified tag for each step from a TF Event file.
+    '''
+    steps = []
+    tag_values = []
+    for e in tf.train.summary_iterator(file_path):
+        if e.WhichOneof("what") == "summary":
+            steps.append(e.step)
+            for v in e.summary.value:
+                if v.tag == tag_name:
+                    tag_values.append(v.simple_value)
+                    
+    assert len(steps) == len(tag_values)
+    return (steps, tag_values)
+
+import re
+
+def get_file_paths_for_experiment(experiment_path, regex=r".*"):
+    '''
+    Get paths to all `test` TF Event files corresponding to some experiment conforming to a regex.
+    '''
+    pattern = re.compile(regex)
+    file_paths = []
+    for run_folder in os.listdir(experiment_path):
+        
+        event_folder_path = f"{experiment_path}/{run_folder}/summaries/test"
+        event_file = os.listdir(event_folder_path)[0]
+        path_event_file = f"{event_folder_path}/{event_file}"
+    
+        if pattern.search(path_event_file):
+            file_paths.append(path_event_file)
+            
+    return file_paths
+
+import pandas as pd
+def load_data_from_event_files(file_paths, tag):
+    '''
+    Loads data from specified TF Event files to a pd df{Steps, Run, Value}, names runs {0, 1, ...}.
+    '''
+    steps, values, runs = [], [], []
+    for i in range(len(file_paths)):
+        log_steps, log_values = get_tag_values(file_paths[i], tag)
+    
+        steps += log_steps
+        values += log_values
+        runs += [i]*len(log_values)
+        
+    return pd.DataFrame({
+        'Step':steps, 
+        'Run':runs, 
+        'Value':values
+})
+
