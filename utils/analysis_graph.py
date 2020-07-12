@@ -52,7 +52,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False):
         
     # Ideally computes for the whole set of experiments & is uniform across all of them 
     # ..even if they have different leghts -> too much work. Eyeball cca 50-> errbars fit.
-    err_every = math.ceil(len(vals_05)//50)
+    err_every = math.ceil(len(vals_05)/50)
 
     ax.set_yticks(np.arange(0, 1., 0.025))   
     ax.yaxis.grid(True)   
@@ -62,7 +62,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False):
     return f_line
 
 import utils.data as udata  
-def analyse_experiments(experiments, tag, **kwargs):
+def analyse_experiments(experiments, tag, limit_steps=None, **kwargs):
     '''
     Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
     '''
@@ -71,8 +71,11 @@ def analyse_experiments(experiments, tag, **kwargs):
     for (folder, regex) in experiments:
         file_paths = udata.get_file_paths_for_experiment(folder, regex)
         dta = udata.load_data_from_event_files(file_paths, tag)
-        p = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
-        handles.append(p)
+        if limit_steps is not None:     # Steps are between limit_steps (min, max) values
+            dta = dta.loc[(dta['Step'] >= limit_steps[0]) & (dta['Step'] <= limit_steps[1])]
+        
+        line_handle = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
+        handles.append(line_handle)
         
     legend_list = list(map(lambda x: x[1], experiments))
     ax.legend(handles, legend_list)
