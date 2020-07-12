@@ -21,8 +21,7 @@ import utils.network as unet
 import utils.analysis as uas
 import utils.analysis_present as uasp
 
-
-name = 'baseline_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x35000'
+name = 'baselineshort_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"
 
 def get_hsm_params_custom(input, output, i):
@@ -48,14 +47,14 @@ def get_hsm_params_custom(input, output, i):
     return hsm_params
 
 def get_training_params():
-    return {'batch_size': 16, 'use_gpu': False, 'epochs_summary': 100, 'epochs_training': 35000, 'learning_rate': 0.1e-3}
+    return {'batch_size': 16, 'use_gpu': False, 'epochs_summary': 100, 'epochs_training': 5000, 'learning_rate': 0.1e-3}
 
 input_tr_processed, output_tr, output_tr_mask = udata.load_data_multiple(
     [1], 'training', lambda x: x*1_000_000)
 input_val_processed, output_val, output_val_mask = udata.load_data_multiple(
     [1], 'validation', lambda x: x*1_000_000)
 
-for i in range(50):
+for i in range(25):
     seed = i
        
     hsm_params = get_hsm_params_custom(input_tr_processed, output_tr, i)
