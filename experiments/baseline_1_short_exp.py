@@ -21,9 +21,11 @@ import utils.network as unet
 import utils.analysis as uas
 import utils.analysis_present as uasp
 
+#
+# Short-trained version of baseline_1_long for expX comparisons
+#
 name = 'baselineshort_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"
-
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
     _, input_shape = input.shape

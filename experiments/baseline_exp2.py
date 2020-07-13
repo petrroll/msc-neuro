@@ -23,6 +23,7 @@ import utils.analysis_present as uasp
 
 #
 # 1
+# Input normalized to N(0, 1) instead of 0-255
 #
 name = 'baselineshort_exp21_1normIms_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"
@@ -90,7 +91,8 @@ for i in range(10):
     hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
 
 #
-# 1
+# 2
+# Input normalized to N(0, 1) instead of 0-255; output var==1
 #
 name = 'baselineshort_exp22_1normImsOs_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"

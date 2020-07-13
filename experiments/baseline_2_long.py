@@ -21,8 +21,9 @@ import utils.network as unet
 import utils.analysis as uas
 import utils.analysis_present as uasp
 
+#
 # based on exp21, normalized inputs to N(0, 1)
-
+#
 name = 'baseline2_1normIms_Dog9xN02xN_LxSpxSp_Nonorm_1e3x16x35000'
 exp_folder = "baseline"
 

@@ -93,7 +93,7 @@ for i in range(10, 20):
 
 #
 # 3
-# Combination of 31 and baseline2
+# Combination of exp31 and baseline_2
 #
 name = 'baselineshort_exp33_1normIms_Dog9xN02xN_SpxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"

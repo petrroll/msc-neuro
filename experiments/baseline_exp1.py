@@ -23,6 +23,7 @@ import utils.analysis_present as uasp
 
 #
 # 1
+# Try to learn on regions 1 and 2 at the same time, same network.
 #
 name = 'baselineshort_exp11_12mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"
@@ -92,6 +93,7 @@ for i in range(10):
 
 #
 # 2
+# Try to learn on regions 1 and 2 at the same time, more DoG network.
 #
 name = 'baselineshort_exp12_12mult1e6_Dog16xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"

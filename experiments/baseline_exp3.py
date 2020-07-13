@@ -23,6 +23,7 @@ import utils.analysis_present as uasp
 
 #
 # 1
+# Even DoG has softplus non-linearity.
 #
 name = 'baselineshort_exp31_1mult1e6_Dog9xN0x2N_SpxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"
@@ -92,6 +93,7 @@ for i in range(10):
 
 #
 # 2
+# Duplicate hidden layer with the same parameters.
 #
 name = 'baselineshort_exp32_1mult1e6_Dog16xN02xN02xN_LxSpxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"

@@ -21,10 +21,11 @@ import utils.network as unet
 import utils.analysis as uas
 import utils.analysis_present as uasp
 
-
+#
+# long-trained version of baseline_1
+#
 name = 'baseline_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x35000'
 exp_folder = "baseline"
-
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
     _, input_shape = input.shape
