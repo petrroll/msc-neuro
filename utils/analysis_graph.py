@@ -69,7 +69,7 @@ def analyse_experiments(experiments, tag, limit_steps=None, **kwargs):
     fig, ax = plt.subplots(figsize=(20,10))
     handles = []
     for (folder, regex) in experiments:
-        file_paths = udata.get_file_paths_for_experiment(folder, regex)
+        file_paths = udata.get_file_paths_filtered(folder, regex)
         dta = udata.load_data_from_event_files(file_paths, tag)
         if limit_steps is not None:     # Steps are between limit_steps (min, max) values
             dta = dta.loc[(dta['Step'] >= limit_steps[0]) & (dta['Step'] <= limit_steps[1])]
