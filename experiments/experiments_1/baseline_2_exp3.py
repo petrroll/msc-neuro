@@ -29,6 +29,7 @@ import utils.analysis_present as uasp
 #
 name = 'baselineshort_exp33_1normIms_Dog9xN02xN_SpxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_1"
+exp = "bs2_exp33"
 
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
@@ -87,7 +88,10 @@ for i in range(0, 20):
         data_filters=data_filters,
         learning_alg=larg, 
         opt_params=opt_params, 
-        output_dir=f"logs/{exp_folder}/{name_str}" 
+        output_dir=f"logs/{exp_folder}/{exp}/{name_str}" 
     )
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-    hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
+    hsm.save_model(f"./models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
+with open("./experiments/experiments.txt", "a+") as f:
+    f.write(f"{exp_folder}/{exp}/{name}")
+

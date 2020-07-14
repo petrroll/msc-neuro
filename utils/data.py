@@ -80,22 +80,19 @@ def get_tag_values(file_path, tag_name):
     return (steps, tag_values)
 
 import re
-
-def get_file_paths_for_experiment(experiment_path, regex=r".*"):
+def get_file_paths_filtered(root, regex=r".*"):
     '''
-    Get paths to all `test` TF Event files corresponding to some experiment conforming to a regex.
+    Returns paths to all files conforming to specified regex.
     '''
     pattern = re.compile(regex)
     file_paths = []
-    for run_folder in os.listdir(experiment_path):
-        
-        event_folder_path = f"{experiment_path}/{run_folder}/summaries/test"
-        event_file = os.listdir(event_folder_path)[0]
-        path_event_file = f"{event_folder_path}/{event_file}"
     
-        if pattern.search(path_event_file):
-            file_paths.append(path_event_file)
-            
+    for root, _, files in os.walk(root):
+        for file in files:
+            file_path = f"{root}/{file}" 
+            if pattern.search(file_path):
+                file_paths.append(file_path)
+                
     return file_paths
 
 import pandas as pd

@@ -26,6 +26,7 @@ import utils.analysis_present as uasp
 #
 name = 'baselineshort_exprep11_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_repeatability"
+exp = "bs1_exp11"
 
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
@@ -84,10 +85,13 @@ for i in [3, 3, 23, 23]:
         data_filters=data_filters,
         learning_alg=larg, 
         opt_params=opt_params, 
-        output_dir=f"logs/{exp_folder}/{name_str}" 
+        output_dir=f"logs/{exp_folder}/{exp}/{name_str}" 
     )
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-    hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
+    hsm.save_model(f"./models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
+with open("./experiments/experiments.txt", "a+") as f:
+    f.write(f"{exp_folder}/{exp}/{name}")
+
 
 
 #
@@ -95,6 +99,7 @@ for i in [3, 3, 23, 23]:
 #
 name = 'baselineshort_exprep12_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x5000'
 exp_folder = "experiments_repeatability"
+exp = "bs1_exp12"
 
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
@@ -153,7 +158,10 @@ for i in [3, 3, 23, 23]:
         data_filters=data_filters,
         learning_alg=larg, 
         opt_params=opt_params, 
-        output_dir=f"logs/{exp_folder}/{name_str}" 
+        output_dir=f"logs/{exp_folder}/{exp}/{name_str}" 
     )
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-    hsm.save_model(f"./models/{exp_folder}/{name}/{name}__{i}.ndnmod")
+    hsm.save_model(f"./models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
+with open("./experiments/experiments.txt", "a+") as f:
+    f.write(f"{exp_folder}/{exp}/{name}")
+
