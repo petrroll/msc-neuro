@@ -1,7 +1,7 @@
 # Based on: https://blog.horejsek.com/makefile-with-python/
 VENV_NAME?=env
 PYTHON=$(VENV_NAME)/bin/python
-PYTHON_GLOBAL=python3
+PYTHON_GLOBAL=python3.7
 
 # ENV & deps
 .PHONY: $(VENV_NAME)-dev
@@ -14,6 +14,10 @@ $(VENV_NAME): requirements.txt activate
 
 activate:
 	echo "source "$(VENV_NAME)"/bin/activate" > activate
+
+.PHONY: Dockerfile
+Dockerfile:
+	docker build -t houska/mscneuro .
 
 # Cleanup
 
