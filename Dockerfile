@@ -10,7 +10,7 @@ EXPOSE 6006 8888
 # Note:
 # I know that I should bake dependencies into the docker image, copy all relevant files in (./Data, ./experiments, ./NDN, ...), 
 # ..and only ever mount ./logs and ./models but using a container as a persistent VM is just more convinient to me atm for this 
-# ..very particular usecase. 
+# ..very particular usecase: Using docker only to deliver the correct CUDA/... libraries for the version of TF I'm using. 
 #
 # Note 2: 
 # - The commented-out approach uses virtenv even though it doesn't make sense in container environemnt to have 100 % consistent 
