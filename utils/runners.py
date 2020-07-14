@@ -17,7 +17,7 @@ def run_qsub_cpu(exp_folder, exp, exp_args, run):
         f"qsub -q cpu.q -cwd -pe smp 4 -l mem_free=8G,act_mem_free=8G,h_data=20G \
         -o {logs_folder}/o_{run}.log \
         -e {logs_folder}/e_{run}.log \
-            ./utils/run_in_env_with_cuda_aic.sh {exp_path}/{exp} {exp_args}")
+            ./utils/run_in_env_with_cuda_aic.sh {exp_path}/{exp}.py {exp_args}")
 
 def run_qsub_gpu(exp_folder, exp, exp_args, run):
     '''
@@ -29,7 +29,7 @@ def run_qsub_gpu(exp_folder, exp, exp_args, run):
         f"qsub -q cpu.q -cwd -l gpu=1,mem_free=8G,act_mem_free=8G,h_data=20G \
         -o {logs_folder}/o_{run}.log \
         -e {logs_folder}/e_{run}.log \
-            ./utils/run_in_env_with_cuda_aic.sh {exp_path}/{exp} {exp_args}")
+            ./utils/run_in_env_with_cuda_aic.sh {exp_path}/{exp}.py {exp_args}")
 
 def run_env_win(exp_folder, exp, exp_args, run):
     '''
@@ -42,6 +42,19 @@ def run_env_win(exp_folder, exp, exp_args, run):
             > {logs_folder}/o_{run}.log\
             2> {logs_folder}/e_{run}.log")
 
+def run_docker_cgg(exp_folder, exp, exp_args, run):
+    '''
+    Runs `./experiments/exp_folder/exp exp_args` and logs everything along the way.
+    '''
+    exp_path, logs_folder = prepare_paths(exp_folder, exp)
+    os.system("docker container run -d --gpus 1 --mount \
+        type=bind,source="+os.getcwd()+",target=/msc-neuro/ \
+        houska/mscneuro "+
+        f"bash /msc-neuro/utils/run_in_env_docker_cgg.sh \
+            {logs_folder}/o_{run}.log \
+            {logs_folder}/e_{run}.log \
+            {exp_path}/{exp}.py {exp_args}")
+
 def get_runner(environment):
     '''
     Gets a runner method based on environment.
@@ -50,4 +63,5 @@ def get_runner(environment):
         "qsub-cpu": run_qsub_cpu,
         "qsub-gpu": run_qsub_gpu,
         "env_win": run_env_win,
+        "docker_cgg": run_docker_cgg,
     }[environment]
