@@ -67,7 +67,8 @@ def analyse_experiments(experiments, tag, limit_steps=None, **kwargs):
     Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
     '''
     fig, ax = plt.subplots(figsize=(20,10))
-    handles = []
+    line_handles = []
+    legend_names = []
     for (folder, regex) in experiments:
         file_paths = udata.get_file_paths_filtered(folder, regex)
         dta = udata.load_data_from_event_files(file_paths, tag)
@@ -75,8 +76,7 @@ def analyse_experiments(experiments, tag, limit_steps=None, **kwargs):
             dta = dta.loc[(dta['Step'] >= limit_steps[0]) & (dta['Step'] <= limit_steps[1])]
         
         line_handle = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
-        handles.append(line_handle)
-        
-    legend_list = list(map(lambda x: x[1], experiments))
-    ax.legend(handles, legend_list)
+        line_handles.append(line_handle)
+        legend_names.append(f"{regex} ({len(file_paths)} runs)")
+    ax.legend(line_handles, legend_names)
     plt.show()
