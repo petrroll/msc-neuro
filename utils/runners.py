@@ -1,4 +1,5 @@
 import os
+import fire
 
 def prepare_paths(exp_folder, exp):
     exp_path = f"./experiments/{exp_folder}"
@@ -39,8 +40,8 @@ def run_env_win(exp_folder, exp, exp_args, run):
     exp_path, exp = exp_path.replace('/', '\\'), exp.replace('/', '\\') 
     os.system(
         f"start /B env\scripts\python.exe {exp_path}\\{exp}.py {exp_args} \
-            > {logs_folder}/o_{run}.log\
-            2> {logs_folder}/e_{run}.log")
+            >> {logs_folder}/o_{run}.log\
+            2>> {logs_folder}/e_{run}.log")
 
 def run_docker_cgg(exp_folder, exp, exp_args, run):
     '''
@@ -62,6 +63,17 @@ def get_runner(environment):
     return {
         "qsub-cpu": run_qsub_cpu,
         "qsub-gpu": run_qsub_gpu,
-        "env_win": run_env_win,
-        "docker_cgg": run_docker_cgg,
+        "env-win": run_env_win,
+        "docker-cgg": run_docker_cgg,
     }[environment]
+
+def generic_run(exp_folder, exp, runner):
+    runner = get_runner(runner)
+    runner(
+            exp_folder, exp,
+            f"--exp_folder={exp_folder} --exp={exp}", 
+            run=0
+            )
+
+if __name__ == "__main__":
+    fire.Fire(generic_run)
