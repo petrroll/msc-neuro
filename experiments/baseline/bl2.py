@@ -22,11 +22,11 @@ import utils.analysis as uas
 import utils.analysis_present as uasp
 
 #
-# long-trained version of baseline_1
+# based on exp21, normalized inputs to N(0, 1)
 #
-name = 'baseline_1mult1e6_Dog9xN0x2N_LxSpxSp_Nonorm_1e3x16x35000'
+name = 'baseline2_1normIms_Dog9xN02xN_LxSpxSp_Nonorm_1e3x16x35000'
 exp_folder = "baseline"
-exp = "b1"
+exp = "b2"
 
 def get_hsm_params_custom(input, output, i):
     _, output_shape = output.shape
@@ -54,11 +54,11 @@ def get_training_params():
     return {'batch_size': 16, 'use_gpu': False, 'epochs_summary': 100, 'epochs_training': 35000, 'learning_rate': 0.1e-3}
 
 input_tr_processed, output_tr, output_tr_mask = udata.load_data_multiple(
-    [1], 'training', lambda x: x*1_000_000)
+    [1], 'training', udata.normalize_mean_std)
 input_val_processed, output_val, output_val_mask = udata.load_data_multiple(
-    [1], 'validation', lambda x: x*1_000_000)
+    [1], 'validation', udata.normalize_mean_std)
 
-for i in range(50):
+for i in range(25):
     seed = i
        
     hsm_params = get_hsm_params_custom(input_tr_processed, output_tr, i)
@@ -90,5 +90,5 @@ for i in range(50):
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
     hsm.save_model(f"./models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
 with open("./experiments/experiments.txt", "a+") as f:
-    f.write(f"{exp_folder}/{exp}/{name}")
+    f.write(f"{exp_folder}/{exp}/{name}\n")
 
