@@ -19,6 +19,10 @@ activate:
 Dockerfile:
 	docker build -t houska/mscneuro .
 
+.PHONY: NDN3
+NDN3:
+	git submodule update --init --recursive
+
 # Cleanup
 
 .PHONY: clean_$(VENV_NAME)
