@@ -1,0 +1,1 @@
+- All experiments prior to b3 have lr of `0.1e-3` reported as `1e3` instead of `1e4` in name
