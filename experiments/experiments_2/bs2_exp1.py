@@ -33,7 +33,7 @@ def runner(run, learning_rate):
 def run_1(run, learning_rate):
     name = f'lr{learning_rate}x5000'
     exp_folder = "experiments_2"
-    exp = f"bs1_exp1x{run}"
+    exp = f"bs2_exp1x{run}"
 
     def get_hsm_params_custom(input, output, i):
         _, output_shape = output.shape
