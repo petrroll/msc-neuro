@@ -91,5 +91,5 @@ for i in range(10):
     res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
     hsm.save_model(f"./models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
 with open("./experiments/experiments.txt", "a+") as f:
-    f.write(f"{exp_folder}/{exp}/{name}")
+    f.write(f"{exp_folder}/{exp}/{name}\n")
 
