@@ -115,16 +115,17 @@ _templates
 .idea
 .vscode/*
 
+# ENV Activate proxy
+/activate
+
 # Data (at least for now)
 Data/
 
 # TF logs
 logs/
 
-# ENV Activate proxy
-/activate
+# Job logs
+job_logs/
 
-*[Ll]ogs/
-*[Ll]og/
-
+# Saved models
 [Mm]odels/
