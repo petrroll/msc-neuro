@@ -3,7 +3,7 @@ import fire
 
 def prepare_paths(exp_folder, exp):
     exp_path = f"./experiments/{exp_folder}"
-    logs_folder = f"./job_logs/{exp_folder}/{exp}"
+    logs_folder = f"./training_data/job_logs/{exp_folder}/{exp}"
     os.makedirs(logs_folder, exist_ok=True)
 
     return exp_path, logs_folder

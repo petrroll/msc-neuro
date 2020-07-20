@@ -73,7 +73,7 @@ def train_network(train_input, train_output,
         data_filters=data_filters,
         learning_alg=larg, 
         opt_params=opt_params, 
-        output_dir=f"logs/{logdir}/{name_str}"
+        output_dir=f"training_data/logs/{logdir}/{name_str}"
     )
     return hsm
 

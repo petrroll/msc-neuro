@@ -93,10 +93,10 @@ def run_1(exp_folder, exp, run, hidden, dog_layers):
             data_filters=data_filters,
             learning_alg=larg, 
             opt_params=opt_params, 
-            output_dir=f"logs/{exp_folder}/{exp}/{name_str}" 
+            output_dir=f"training_data/logs/{exp_folder}/{exp}/{name_str}" 
         )
         res, naeval, corr = uasp.evaluate_all(hsm, input_val_processed, output_val, output_val_mask)
-        hsm.save_model(f"./models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
+        hsm.save_model(f"./training_data/models/{exp_folder}/{exp}/{name}__{i}.ndnmod")
     with open("./experiments/experiments.txt", "a+") as f:
         f.write(f"{exp_folder}/{exp}/{name}\n")
 

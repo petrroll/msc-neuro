@@ -121,11 +121,5 @@ _templates
 # Data (at least for now)
 Data/
 
-# TF logs
-logs/
-
-# Job logs
-job_logs/
-
-# Saved models
-[Mm]odels/
+# Training data (tf `logs`, `job_logs`, saved `models`)
+training_data/ 
