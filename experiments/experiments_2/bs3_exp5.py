@@ -50,7 +50,7 @@ def run_1(exp_folder, exp, run, hidden, reg_lambda, reg_type):
             layer_types=['diff_of_gaussians','normal','normal'],
             act_funcs=['lin', 'softplus','softplus'],
             reg_list={
-                '{reg_type}':[None, reg_lambda, reg_lambda]
+                f'{reg_type}':[None, reg_lambda, reg_lambda]
                 })
         hsm_params['weights_initializers']=['random','normal','normal']
         hsm_params['biases_initializers']=['trunc_normal','trunc_normal','trunc_normal']
