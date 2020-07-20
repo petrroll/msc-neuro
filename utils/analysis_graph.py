@@ -32,15 +32,17 @@ def plot_square_w_as_heatmaps(w, get_data, plots=(3, 3)):
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False):
+def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_steps=False):
     '''
     Visualizes data for set of runs, expects pd df{Steps, Run, Value}.
+    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25 
+    - normalize_steps: Normalizes steps to 0-1 range 
     '''
     assert (fig is None) == (ax is None)
     
     by_step = dta.groupby("Step", as_index=False)
 
-    steps = by_step.first()["Step"].values
+    steps = by_step.first()["Step"].values if not normalize_steps else by_step.first()["Step"].values / by_step.first()["Step"].max()
     vals_95 = by_step.quantile(0.95)["Value"].values
     vals_05 = by_step.quantile(0.05)["Value"].values
     vals_75 = by_step.quantile(0.75)["Value"].values
