@@ -95,6 +95,23 @@ def get_file_paths_filtered(root, regex=r".*"):
                 
     return file_paths
 
+def get_experiment_entries(regex=r".*", only_suffix_after_matched=True, path="./training_data/experiments.txt"):
+    '''
+    Returns all entries in experiments.txt log for regex.
+
+    - only_after_matched: Only returns suffixes after the matched part (removing .* near the end is important for this to work)
+    - Automatically removes ".*test" from the end of the regex.
+    - Doesn't take root & assumes the regex is unique across all experiments.
+    '''
+    regex = regex[:-6] if regex[-6:] == ".*test" else regex
+    pattern = re.compile(regex)
+    
+    with open("./training_data/experiments.txt", "r") as f:
+        if only_suffix_after_matched:
+            return [ line[pattern.search(line).span()[1]:].strip() for line in f if pattern.search(line) ]   
+        else:
+            return [ line.strip() for line in f if pattern.search(line) ]   
+
 import pandas as pd
 def load_data_from_event_files(file_paths, tag):
     '''

@@ -64,9 +64,12 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     return f_line
 
 import utils.data as udata  
-def analyse_experiments(experiments, tag, limit_steps=None, **kwargs):
+def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, **kwargs):
     '''
     Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
+
+    - limit_steps (float, float)|None: Only shows data for steps within bounds (assumes absolute step numbers / float(inf))
+    - experiments_log_in_legend bool: Show corresponding entries from experiments.txt log file.
     '''
     fig, ax = plt.subplots(figsize=(20,10))
     line_handles = []
@@ -79,6 +82,7 @@ def analyse_experiments(experiments, tag, limit_steps=None, **kwargs):
         
         line_handle = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
         line_handles.append(line_handle)
-        legend_names.append(f"{regex} ({len(file_paths)} runs)")
+        legend_exp = udata.get_experiment_entries(regex) if experiments_log_in_legend else []
+        legend_names.append(f"{regex} ({len(file_paths)} runs) {', '.join(legend_exp)}")
     ax.legend(line_handles, legend_names)
     plt.show()
