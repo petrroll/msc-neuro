@@ -35,8 +35,9 @@ import matplotlib.pyplot as plt
 def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_steps=False):
     '''
     Visualizes data for set of runs, expects pd df{Steps, Run, Value}.
-    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25 
-    - normalize_steps: Normalizes steps to 0-1 range 
+
+    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25.
+    - normalize_steps: Normalizes steps to 0-1 range.
     '''
     assert (fig is None) == (ax is None)
     
@@ -68,7 +69,7 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
     '''
     Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
 
-    - limit_steps (float, float)|None: Only shows data for steps within bounds (assumes absolute step numbers / float(inf))
+    - limit_steps (float, float)|None: Only shows data for steps within bounds (expects absolute step numbers / float(inf))
     - experiments_log_in_legend bool: Show corresponding entries from experiments.txt log file.
     '''
     fig, ax = plt.subplots(figsize=(20,10))
