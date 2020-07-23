@@ -76,14 +76,12 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
     line_handles = []
     legend_names = []
     for (folder, regex) in experiments:
-        file_paths = udata.get_file_paths_filtered(folder, regex)
-        dta = udata.load_data_from_event_files(file_paths, tag)
-        if limit_steps is not None:     # Steps are between limit_steps (min, max) values
-            dta = dta.loc[(dta['Step'] >= limit_steps[0]) & (dta['Step'] <= limit_steps[1])]
-        
+        dta, logs_num = udata.get_log_data_for_experiment(folder, regex, tag, limit_steps)        
         line_handle = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
+        
         line_handles.append(line_handle)
         legend_exp = udata.get_experiment_entries(regex) if experiments_log_in_legend else []
-        legend_names.append(f"{regex} ({len(file_paths)} runs) {', '.join(legend_exp)}")
+        legend_names.append(f"{regex} ({logs_num} runs) {', '.join(legend_exp)}")
     ax.legend(line_handles, legend_names)
     plt.show()
+

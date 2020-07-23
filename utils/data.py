@@ -129,5 +129,16 @@ def load_data_from_event_files(file_paths, tag):
         'Step':steps, 
         'Run':runs, 
         'Value':values
-})
+    })
 
+def get_log_data_for_experiment(folder, regex, tag, limit_steps=None):
+    '''
+    Returns the log data and the number of used logs for an experiment specied by a logs folder and a regex 
+    filtered to include only steps conforming specified bounds.
+    '''
+    file_paths = get_file_paths_filtered(folder, regex)
+    dta = load_data_from_event_files(file_paths, tag)
+    if limit_steps is not None:     # Steps are between limit_steps (min, max) values
+        dta = dta.loc[(dta['Step'] >= limit_steps[0]) & (dta['Step'] <= limit_steps[1])]
+
+    return (dta, len(file_paths))
