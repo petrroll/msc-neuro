@@ -102,7 +102,7 @@ def run_1(exp_folder, exp, run, noise_coef, eval_noised):
     # Trained with generated noised data instead of just generated data (true gold data) 
     # Evaluated either on true generated data (gold) or noised
     output_tr_used = output_tr_gen_noise
-    output_val_used = output_tr_gen_noise if eval_noised else output_tr_gen
+    output_val_used = output_val_gen_noise if eval_noised else output_val_gen
 
     for i in range(10):
         seed = i
