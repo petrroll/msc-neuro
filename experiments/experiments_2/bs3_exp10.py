@@ -50,8 +50,8 @@ def run_1(exp_folder, exp, run, lin_scale, input_scale):
             layer_types=(['lin_scale'] if lin_scale else []) + ['diff_of_gaussians','normal','normal'],
             act_funcs=(['lin'] if lin_scale else []) + ['lin', 'softplus','softplus'],
             reg_list={})
-        hsm_params['weights_initializers']=([None] if lin_scale else [])['random','normal','normal']
-        hsm_params['biases_initializers']=([None] if lin_scale else [])['trunc_normal','trunc_normal','trunc_normal']
+        hsm_params['weights_initializers']=([None] if lin_scale else []) + ['random','normal','normal']
+        hsm_params['biases_initializers']=([None] if lin_scale else []) + ['trunc_normal','trunc_normal','trunc_normal']
 
         return hsm_params
 

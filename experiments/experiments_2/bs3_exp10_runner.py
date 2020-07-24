@@ -14,7 +14,7 @@ if __name__ == "__main__":
         for input_scale in ['normalize_mean_std', 'times_mil', 'identity']:
             runner(
                 exp_folder, exp,
-                f"--exp_folder={exp_folder} --exp={exp} --run={run} --lin_scale={lin_scale} --input_scale{input_scale}", 
+                f"--exp_folder={exp_folder} --exp={exp} --run={run} --lin_scale={lin_scale} --input_scale={input_scale}", 
                 run
                 )
             run += 1
