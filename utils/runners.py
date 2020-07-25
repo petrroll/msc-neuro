@@ -63,8 +63,8 @@ def get_runner(environment):
     return {
         "qsub-cpu": run_qsub_cpu,
         "qsub-gpu": run_qsub_gpu,
-        "env-win": run_env_win,
-        "docker-cgg": run_docker_cgg,
+        "win": run_env_win,
+        "docker": run_docker_cgg,
     }[environment]
 
 def generic_run(exp_folder, exp, runner):
