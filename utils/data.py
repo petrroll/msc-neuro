@@ -95,24 +95,32 @@ def get_file_paths_filtered(root, regex=r".*"):
                 
     return file_paths
 
-def get_experiment_entries(regex=r".*", only_suffix_after_matched=True, path="./training_data/experiments.txt"):
+def get_experiment_entries(folder="", regex=r".*", only_suffix_after_matched=True, path="./training_data/experiments.txt"):
     '''
     Returns all entries in experiments.txt log for regex.
 
     - only_after_matched: Only returns suffixes after the matched part (removing .* near the end is important for this to work)
     - Automatically removes ".*test" from the end of the regex.
-    - Doesn't take root & assumes the regex identifies desired experiment uniquely across experiment folders, etc.
+    - Assumes:
+        - folder might begin with "(./)?training_data/logs/" that needs to get removed to match experiments.txt entries
+        - experiment entries begin with whatever is in folder after prefix removal (above) anc can be matched with it
+        - Ignores comments starting with `#`
     '''
-    regex = regex[:-6] if regex[-6:] == ".*test" else regex     # Ignore matching .*test suffix
-    regex = f"^[^#].*{regex}"                                   # Ignore comments, theoretically this will make it match everything in case of e.g. empty regex but it shouldn't be a real problem
+    def is_not_comment(line):
+        return len(line) > 0 and line[0] != "#"
+
+    regex = regex[:-6] if regex[-6:] == ".*test" else regex # Ignore matching .*test suffix
+    folder = folder.split("training_data/logs/")[-1]        # Ignore the logs folder prefix, take substring after it (FIXME: This should be better abstracted)
+    folder = folder if folder[-1] == "/" else f"{folder}/"  # Need to potentially append a "/" to make sure the folder part is used to actually match folders in the path an nothing else (FIXME: Not robust)
+    regex = f"{re.escape(folder)}.*{regex}"                 # Ignore comments, include folder: theoretically will make it match everything in case of e.g. empty regex but it shouldn't be a real problem
     pattern = re.compile(regex)
-    
+
     with open("./training_data/experiments.txt", "r") as f:
         if only_suffix_after_matched:
             # `pattern.search(line).span()[1]` gets you the index of the end of the matched substring
-            return [ line[pattern.search(line).span()[1]:].strip() for line in f if pattern.search(line) ]   
+            return [ line[pattern.search(line).span()[1]:].strip() for line in f if pattern.search(line) and is_not_comment(line) ]   
         else:
-            return [ line.strip() for line in f if pattern.search(line) ]   
+            return [ line.strip() for line in f if pattern.search(line) and is_not_comment(line) ]   
 
 import pandas as pd
 def load_data_from_event_files(file_paths, tag):
