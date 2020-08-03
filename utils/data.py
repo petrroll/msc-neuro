@@ -103,11 +103,13 @@ def get_experiment_entries(regex=r".*", only_suffix_after_matched=True, path="./
     - Automatically removes ".*test" from the end of the regex.
     - Doesn't take root & assumes the regex identifies desired experiment uniquely across experiment folders, etc.
     '''
-    regex = regex[:-6] if regex[-6:] == ".*test" else regex
+    regex = regex[:-6] if regex[-6:] == ".*test" else regex     # Ignore matching .*test suffix
+    regex = f"^[^#].*{regex}"                                   # Ignore comments, theoretically this will make it match everything in case of e.g. empty regex but it shouldn't be a real problem
     pattern = re.compile(regex)
     
     with open("./training_data/experiments.txt", "r") as f:
         if only_suffix_after_matched:
+            # `pattern.search(line).span()[1]` gets you the index of the end of the matched substring
             return [ line[pattern.search(line).span()[1]:].strip() for line in f if pattern.search(line) ]   
         else:
             return [ line.strip() for line in f if pattern.search(line) ]   
