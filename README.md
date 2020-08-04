@@ -1,4 +1,10 @@
 # msc-neuro
+Deep-learning architectures for analysing population neural data:
+- Research into DL architectures targeting pop. data recorded from mammalian primary visual cortex.
+- Development of new parametrized kernels for the NDN3 library.
+- Experiments testing novel combinations of already available/newly created methods.
+- Master thesis (text eventually [here](https://github.com/petrroll/msc-thesis)).
+
 
 ### Setup:
 0. Hydrate submodules: `git submodule update --init --recursive`
