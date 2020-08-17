@@ -30,7 +30,7 @@ def runner(exp_folder, exp):
 # based on bl3:
 # - added l2 0.1 to output layer 
 def run_1(exp_folder, exp):
-    name = 'baseline3_1normIms_Dog9xN0x2N_LxSpxSp_Wn_Btn_Nonorm_regl2_L0.1_0.001x16x35000'
+    name = 'baseline4_1normIms_Dog9xN0x2N_LxSpxSp_Wn_Btn_Nonorm_regL2Last0.1_0.001x16x35000'
 
     def get_hsm_params_custom(input, output, i):
         _, output_shape = output.shape
