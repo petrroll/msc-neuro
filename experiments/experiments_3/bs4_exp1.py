@@ -49,7 +49,7 @@ def run_1(exp_folder, exp, run, hidden, reg_h, reg_l):
             act_funcs=['softplus','softplus'],
             reg_list={
                 'l2':[None, reg_l],
-                'dx2':[reg_h, None],
+                'd2x':[reg_h, None],
                 })
         hsm_params['weights_initializers']=['normal','normal']
         hsm_params['biases_initializers']=['trunc_normal','trunc_normal']
