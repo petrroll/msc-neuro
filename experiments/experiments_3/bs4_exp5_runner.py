@@ -12,8 +12,8 @@ if __name__ == "__main__":
     run = 0
     for hidden_lt in ['sep']:
         for c_size in [3,7,15]:
-            for c_filters in [9, 25]:
-                for cd2x in [0.1, 1]:
+            for c_filters in [9, 30]:
+                for cd2x in [0.01, 0.1]:
                     for hidden_t in ['l1', 'l2']: # l1 as described in the original paper
                         for hidden_s in [0.01, 0.1, 1]:
                             runner(
@@ -26,8 +26,8 @@ if __name__ == "__main__":
     run += 100
     for hidden_lt in ['normal']:
         for c_size in [3,7,15]:
-            for c_filters in [9, 25]:
-                for cd2x in [0.1, 1]:
+            for c_filters in [9, 30]:
+                for cd2x in [0.01, 0.1]:
                     for hidden_t in ['max', 'l2']:
                         for hidden_s in [0.01, 0.1, 1]:
                             runner(
