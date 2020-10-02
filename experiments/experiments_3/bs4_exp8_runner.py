@@ -1,6 +1,5 @@
 import os
 import sys
-from sys import last_type
 
 sys.path.append(os.getcwd())
 
