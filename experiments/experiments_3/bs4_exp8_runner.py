@@ -12,7 +12,7 @@ if __name__ == "__main__":
     run = 0
     for c_filters in [48]:
         for cd2x in [0.1, 0.5, 1]:
-            for conv_reg_type in ["max_filt", "l2", "max"]:
+            for conv_reg_type in ["max_filt"]:
                 for conv_reg_str in [1, 10]:
                     for last_type in ["l1", "l2"]:
                         for last_str in [0.005, 0.01, 0.05] if last_type == "l1" else [0.01, 0.05, 0.1]:

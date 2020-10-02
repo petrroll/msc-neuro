@@ -59,7 +59,7 @@ def run_1(exp_folder, exp, run, cd2x, conv_reg_type, conv_reg_str, last_type, la
 
             reg_list={
                 'd2x': [cd2x, cd2x, cd2x, None],
-                'conv_reg_type': [conv_reg_str, conv_reg_str, conv_reg_str, None],
+                conv_reg_type: [conv_reg_str, conv_reg_str, conv_reg_str, None],
                 last_type: [None, None, None, last_str]
                 })
         hsm_params['weights_initializers']=['normal','normal','normal', 'normal']
