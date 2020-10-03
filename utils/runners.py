@@ -60,12 +60,18 @@ def get_runner(environment):
     '''
     Gets a runner method based on environment.
     '''
-    return {
+    mapping = {
         "qsub-cpu": run_qsub_cpu,
         "qsub-gpu": run_qsub_gpu,
         "win": run_env_win,
         "docker": run_docker_cgg,
-    }[environment]
+    }
+
+    if environment in mapping:
+        return mapping[environment]
+    else:
+        raise Exception(f"Available environments: " + ", ".join(mapping.keys()))
+
 
 def generic_run(exp_folder, exp, runner):
     runner = get_runner(runner)
