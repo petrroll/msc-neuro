@@ -32,7 +32,42 @@ def plot_square_w_as_heatmaps(w, get_data, plots=(3, 3)):
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_steps=False):
+def get_metrics_runs(dta, normalize_steps=False, median_mode = False):
+    '''
+    Get performance metrics for set of runs, expects pd df{Steps, Run, Value}.
+
+    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25.
+    - normalize_steps: Normalizes steps to 0-1 range.
+    '''  
+    by_step = dta.groupby("Step", as_index=False)
+
+    steps = by_step.first()["Step"].values if not normalize_steps else by_step.first()["Step"].values / by_step.first()["Step"].max()
+    
+    if median_mode:
+        vals_top = by_step.quantile(0.90)["Value"].values
+        vals_bot = by_step.quantile(0.10)["Value"].values
+        vals_mid = by_step.quantile(0.50)["Value"].values
+        vals_bot_sec = by_step.quantile(0.25)["Value"].values
+    else:
+        vals_top = by_step.quantile(0.95)["Value"].values
+        vals_bot = by_step.quantile(0.05)["Value"].values
+        vals_mid = by_step.quantile(0.75)["Value"].values
+        vals_bot_sec = by_step.quantile(0.25)["Value"].values
+
+    return (vals_top, vals_bot, vals_mid, vals_bot_sec, steps)
+
+def summarize_runs(dta, normalize_steps=False, median_mode = False, **kwargs):
+    '''
+    Gets fully trained performance metrics for set of runs, expects pd df{Steps, Run, Value}.
+
+    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25.
+    - normalize_steps: Normalizes steps to 0-1 range.
+    '''
+    (vals_top, vals_bot, vals_mid, _, _) = get_metrics_runs(dta, normalize_steps, median_mode)
+    return (vals_mid[-1], vals_top[-1], vals_bot[-1])
+
+
+def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, median_mode = False, figsize=None):
     '''
     Visualizes data for set of runs, expects pd df{Steps, Run, Value}.
 
@@ -40,14 +75,10 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     - normalize_steps: Normalizes steps to 0-1 range.
     '''
     assert (fig is None) == (ax is None)
-    
-    by_step = dta.groupby("Step", as_index=False)
+    (vals_top, vals_bot, vals_mid, vals_bot_sec, steps) = get_metrics_runs(dta, normalize_steps, median_mode)
 
-    steps = by_step.first()["Step"].values if not normalize_steps else by_step.first()["Step"].values / by_step.first()["Step"].max()
-    vals_95 = by_step.quantile(0.95)["Value"].values
-    vals_05 = by_step.quantile(0.05)["Value"].values
-    vals_75 = by_step.quantile(0.75)["Value"].values
-    vals_25 = by_step.quantile(0.25)["Value"].values
+    if figsize is None:
+        figsize = (20, 10)
 
     # Allows externally passed fix, ax so that it can be added to existing ax
     if fig is None:
@@ -55,17 +86,18 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
         
     # Ideally computes for the whole set of experiments & is uniform across all of them 
     # ..even if they have different leghts -> too much work. Eyeball cca 50-> errbars fit.
-    err_every = math.ceil(len(vals_05)/50)
+    err_every = math.ceil(len(vals_mid)/50)
 
     ax.set_yticks(np.arange(0, 1., 0.025))   
     ax.yaxis.grid(True)   
-    f_line = ax.errorbar(steps, vals_75, yerr=[(vals_75-vals_05), (vals_95-vals_75)], capsize=8, alpha=0.75, elinewidth=2, errorevery=err_every)[0]
+
+    f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=8, alpha=0.75, elinewidth=2, errorevery=err_every)[0]
     if second_level_errbar: # Draws second set of error boxes at 0.75-0.25
-        _ = ax.errorbar(steps, vals_75, yerr=[(vals_75-vals_25), (vals_75-vals_75)], capsize=4, alpha=0.75, elinewidth=3, errorevery=err_every, c=f_line.get_color())
+        _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=4, alpha=0.75, elinewidth=3, errorevery=err_every, c=f_line.get_color())
     return f_line
 
 import utils.data as udata  
-def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, **kwargs):
+def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, **kwargs):
     '''
     Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
 
@@ -75,13 +107,41 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
     fig, ax = plt.subplots(figsize=(20,10))
     line_handles = []
     legend_names = []
-    for (folder, regex) in experiments:
+    for i, (folder, regex) in enumerate(experiments):
         dta, logs_num = udata.get_log_data_for_experiment(folder, regex, tag, limit_steps)        
         line_handle = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
         
         line_handles.append(line_handle)
-        legend_exp = udata.get_experiment_entries(folder, regex) if experiments_log_in_legend else []
-        legend_names.append(f"{regex} ({logs_num} runs) {', '.join(legend_exp)}")
+        if override_legend is None:
+            legend_exp = udata.get_experiment_entries(folder, regex) if experiments_log_in_legend else []
+            legend_names.append(f"{regex} ({logs_num} runs) {', '.join(legend_exp)}")
+        else:
+            legend_names.append(override_legend[i])
     ax.legend(line_handles, legend_names)
+
+    ax.set_xlabel("training epoch")
+    ax.set_ylabel("mean validation set correlation")
+    ax.tick_params(labelleft=True, labelright=True,)
+    if title: ax.set_title(title)
+
     plt.show()
+
+def summarize_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, **kwargs):
+    '''
+    Prints trained performance summaries for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
+
+    - limit_steps (float, float)|None: Only shows data for steps within bounds (expects absolute step numbers / float(inf))
+    - experiments_log_in_legend bool: Show corresponding entries from experiments.txt log file.
+    '''
+    for i, (folder, regex) in enumerate(experiments):
+        dta, logs_num = udata.get_log_data_for_experiment(folder, regex, tag, limit_steps)        
+        runs_summary = summarize_runs(dta, **kwargs)
+        
+        if override_legend is None:
+            legend_exp = udata.get_experiment_entries(folder, regex) if experiments_log_in_legend else []
+            legend = f"{regex} ({logs_num} runs) {', '.join(legend_exp)}"
+        else:
+            legend = override_legend[i]
+
+        print(f"{legend}: {tuple(map(lambda x: round(x, 2), runs_summary))}")
 
