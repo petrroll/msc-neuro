@@ -23,14 +23,14 @@ import utils.analysis_present as uasp
 
 import fire
 
-def runner(exp_folder, exp):
-    run_1(exp_folder, exp)
+def runner(exp_folder, exp, region):
+    run_1(exp_folder, exp, region)
 
 #
 # based on bl3:
 # - added l2 0.1 to output layer 
-def run_1(exp_folder, exp):
-    name = 'baseline4_1normIms_Dog9xN0x2N_LxSpxSp_Wn_Btn_Nonorm_regL2Last0.1_0.001x16x35000'
+def run_1(exp_folder, exp, region):
+    name = f'multieval_bl4_{region}'
 
     def get_hsm_params_custom(input, output, i):
         _, output_shape = output.shape
@@ -59,9 +59,9 @@ def run_1(exp_folder, exp):
         return {'batch_size': 16, 'use_gpu': False, 'epochs_summary': epochs//50, 'epochs_training': epochs, 'learning_rate': 0.001}
 
     input_tr_processed, output_tr, output_tr_mask = udata.load_data_multiple(
-        [1], 'training', udata.normalize_mean_std)
+        [region], 'training', udata.normalize_mean_std)
     input_val_processed, output_val, output_val_mask = udata.load_data_multiple(
-        [1], 'validation', udata.normalize_mean_std)
+        [region], 'validation', udata.normalize_mean_std)
 
     for i in range(10):
         seed = i

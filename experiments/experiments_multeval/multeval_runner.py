@@ -14,7 +14,7 @@ if __name__ == "__main__":
         for region in [1, 2, 3]:
             runner(
                 exp_folder, exp,
-                f"--exp_folder={exp_folder} --exp={exp} --run={run} --region={region}", 
+                f"--exp_folder={exp_folder} --exp={exp} --region={region}", 
                 run
                 )
             run += 1
