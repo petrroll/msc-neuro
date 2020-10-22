@@ -97,7 +97,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     return f_line
 
 import utils.data as udata  
-def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, **kwargs):
+def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, **kwargs):
     '''
     Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
 
@@ -117,7 +117,9 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
             legend_names.append(f"{regex} ({logs_num} runs) {', '.join(legend_exp)}")
         else:
             legend_names.append(override_legend[i])
-    ax.legend(line_handles, legend_names)
+    
+    if enable_legend:
+        ax.legend(line_handles, legend_names)
 
     ax.set_xlabel("training epoch")
     ax.set_ylabel("mean validation set correlation")
