@@ -68,7 +68,7 @@ def run_1(exp_folder, exp, c_size, c_filters, cd2x, hidden_t, hidden_s, hidden_l
         return hsm_params
 
     def get_training_params():
-        epochs = 5000
+        epochs = 35000
         return {'batch_size': 16, 'use_gpu': False, 'epochs_summary': epochs//50, 'epochs_training': epochs, 'learning_rate': 0.001}
 
     input_tr_processed, output_tr, output_tr_mask = udata.load_data_multiple(
