@@ -7,7 +7,7 @@ import utils.runners as urun
 
 if __name__ == "__main__":
     exp_folder = "experiments_multeval"
-    exps = ["bl2", "bl4"]
+    exps = ["bl2", "bl4", "bs4_exp5"]
     runner = urun.get_runner(sys.argv[1])
     run = 0
     for exp in exps:
