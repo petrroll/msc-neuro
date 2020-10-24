@@ -22,15 +22,15 @@ if __name__ == "__main__":
                             )
                         run += 1
 
-    #run += 100
-    #for hidden_lt in ['normal']:
-    #    for c_size in [3,7,15]:
-    #        for c_filters in [9, 30]:
-    #            for hidden_t in ['max', 'l1']:
-    #                for hidden_s in [0.01, 0.1, 1]:
-    #                    runner(
-    #                        exp_folder, exp,
-    #                        f"--exp_folder={exp_folder} --exp={exp} --run={run} --c_size={c_size} --c_filters={c_filters} --hidden_t={hidden_t} --hidden_s={hidden_s} --hidden_lt={hidden_lt}", 
-    #                        run
-    #                        )
-    #                    run += 1
+    run += 100
+    for hidden_lt in ['normal']:
+        for c_size in [3,7,15]:
+            for c_filters in [9, 30]:
+                for hidden_t in ['max', 'l1']:
+                    for hidden_s in [0.01, 0.1, 1]:
+                        runner(
+                            exp_folder, exp,
+                            f"--exp_folder={exp_folder} --exp={exp} --run={run} --c_size={c_size} --c_filters={c_filters} --hidden_t={hidden_t} --hidden_s={hidden_s} --hidden_lt={hidden_lt}", 
+                            run
+                            )
+                        run += 1
