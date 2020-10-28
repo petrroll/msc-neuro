@@ -21,8 +21,11 @@ We were able to identify modifications that secure greater stability of the mode
 
 ### Data
 - Uses data from [Model Constrained by Visual Hierarchy Improves Prediction of Neural Responses to Natural Scenes](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004927) paper.
+    - Navigate to Supporting Information.
+    - Download the first supplement.
+    - Unzip it to `./`.
 
-# Experiments pipeline: 
+### Experiments pipeline: 
 An experiment is a set of tested architectures + hyperparameters.
 - Identified by `{exp}` name and `{exp_folder}` group. 
     - Both are used throughout the whole system for scripts discovery, logs naming, ... .
