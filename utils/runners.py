@@ -10,6 +10,9 @@ def prepare_paths(exp_folder, exp):
 
 def run_qsub_cpu(exp_folder, exp, exp_args, run):
     '''
+    Execute experiment on CPU queue of Sun grid engine cluster (e.g. AIC cluster).
+
+    Each experiment instance is a separate job.
     Runs `./experiments/exp_folder/exp exp_args` and logs everything along the way.
     '''
     # CPU: qsub -q cpu.q -cwd -pe smp 4 -l gpu=1,mem_free=8G,act_mem_free=8G,h_data=20G
@@ -22,6 +25,9 @@ def run_qsub_cpu(exp_folder, exp, exp_args, run):
 
 def run_qsub_gpu(exp_folder, exp, exp_args, run):
     '''
+    Execute experiment on GPU queue of Sun grid engine cluster (e.g. AIC cluster).
+
+    Each experiment instance is a separate job.
     Runs `./experiments/exp_folder/exp exp_args` and logs everything along the way.
     '''
     # GPU: qsub -q gpu.q -cwd -l gpu=1,mem_free=8G,act_mem_free=8G,h_data=20G 
@@ -34,6 +40,9 @@ def run_qsub_gpu(exp_folder, exp, exp_args, run):
 
 def run_env_win(exp_folder, exp, exp_args, run):
     '''
+    Execute experiment in pure python virtual environment on windows.
+
+    Each experiment instance is a background process.
     Runs `./experiments/exp_folder/exp exp_args` and logs everything along the way.
     '''
     exp_path, logs_folder = prepare_paths(exp_folder, exp)
@@ -45,6 +54,9 @@ def run_env_win(exp_folder, exp, exp_args, run):
 
 def run_docker_cgg(exp_folder, exp, exp_args, run):
     '''
+    Execute experiment on KSVI cluster using docker-ish based system. Requires `houska/mscneuro` docker image.
+
+    Each experiment instance is a docker container.
     Runs `./experiments/exp_folder/exp exp_args` and logs everything along the way.
     '''
     exp_path, logs_folder = prepare_paths(exp_folder, exp)
@@ -58,7 +70,7 @@ def run_docker_cgg(exp_folder, exp, exp_args, run):
 
 def get_runner(environment):
     '''
-    Gets a runner method based on environment.
+    Gets a runner method based on specified environment.
     '''
     mapping = {
         "qsub-cpu": run_qsub_cpu,
@@ -74,6 +86,16 @@ def get_runner(environment):
 
 
 def generic_run(exp_folder, exp, runner):
+    '''
+    Run an experiment file directly without an explicit `_runner.py` script.
+
+    - exp_folder: experiment folder
+    - exp: experiment file name without .py
+    - runner: desired runner
+
+    Note: 
+        ./experiments/{exp_folder}/{exp}.py
+    '''
     runner = get_runner(runner)
     runner(
             exp_folder, exp,

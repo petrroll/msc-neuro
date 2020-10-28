@@ -1,6 +1,11 @@
 import numpy as np
 
 def get_correlation(a, b, mask=None):
+    '''
+    Computes pearson R coefficient across first dimension of two 2-dimensional arrays (output_dim, data_num).
+
+    Zeroes NaN (inc. +-inf) correlations. Supports mask (output_dim, data_num) with the same semantics as data_filters in NDN3.
+    '''
     import scipy.stats
     assert a.shape == b.shape
     
@@ -14,9 +19,16 @@ def get_correlation(a, b, mask=None):
         in range(a.shape[1])
     ])
     
-    return np.nan_to_num(c, False, 0.0)
+    return np.nan_to_num(c, copy=False, nan=0.0)
 
 def get_gaussian(weights, size, impl_sigma=True, impl_concentric=True):
+    '''
+    Gets fully realized gaussian filter based on DiffOfGaussiansLayer layer weights. 
+
+    - size: size of the gaussian filter.
+    - impl_sigma: whether the sigmas should be relative (True for current implementation).
+    - impl_concentric: force co-centric Gaussians (True for current implementation)
+    '''
     def get_single_gauss(alpha, sigma, ux, uy):
         return (alpha) * (np.exp(-((X - ux) ** 2 + (Y - uy) ** 2) / 2 / sigma) / (2*sigma*np.pi))
     

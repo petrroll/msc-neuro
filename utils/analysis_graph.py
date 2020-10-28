@@ -4,9 +4,15 @@ import PIL
 from IPython.display import display
 
 def reshape_single_as_picture(input, size):
+    '''
+    Takes a np array and reshapes it to the specified size. Essentially, a transparent wrapper for np.reshape(input, size)
+    '''
     return np.reshape(input, size)
 
 def as_single_picture(input, size, outsize=None):
+    '''
+    Takes a flatten np array (uint8) and its size and returns it as a PIL Image instance, optionally resized to outsize.
+    '''
     outsize = outsize if outsize is not None else size 
     input_as_uint8 = input.astype(np.uint8)
     return PIL.Image.fromarray(reshape_single_as_picture(input_as_uint8, size), 'L').resize(outsize, PIL.Image.NEAREST)
@@ -14,15 +20,28 @@ def as_single_picture(input, size, outsize=None):
 import seaborn as sns
 import matplotlib.pyplot as plt
 def display_as_single_heatmap(input, size):
+    '''
+    Displays input np array as a heatmap of specified size.
+    '''
     display(sns.heatmap(np.reshape(input, size), center=0.0))
     plt.show()
 
-def plot_square_w_as_heatmaps(w, get_data, plots=(3, 3)):
+def plot_square_w_as_heatmaps(data, data_extractor, plots=(3, 3)):
+    '''
+    Takes input `data`, runs `data_extractor(data, i)` for max of (each plot (nrows, ncols), data.shape[1]) and 
+    then displays a square heatmap for each of the returned `dta`, arranging them in a (nrows, ncols) grid. Useful
+    for displaying set of convolution layer filters.
+
+    E.g.: 
+    weights = hsm.networks[0].layers[0].weights
+    get_data = lambda w, i: get_gaussian(w[:,i], (SIZE_DOWNSAMPLE, SIZE_DOWNSAMPLE))
+    plot_square_w_as_heatmaps(weights, get_data)
+    '''
     nrows, ncols = plots
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols)
     fig.set_size_inches(16, 16)
-    for i in range(min(nrows*ncols, w.shape[1])):
-        dta = get_data(w, i).flatten()
+    for i in range(min(nrows*ncols, data.shape[1])):
+        dta = data_extractor(data, i).flatten()
         size = int(np.sqrt(dta.shape[0]))
         dta = np.reshape(dta, (size, size))
         sns.heatmap(dta, center=0.0, ax=ax[i//ncols][i%ncols])
@@ -34,13 +53,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 def get_metrics_runs(dta, normalize_steps=False, median_mode = False):
     '''
-    Get performance metrics for set of runs, expects pd df{Steps, Run, Value}.
+    Get performance metrics (vals_top, vals_bot, vals_mid, vals_bot_sec, steps) for set of runs. Expects pd df{Steps, Run, Value}.
 
-    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25.
-    - normalize_steps: Normalizes steps to 0-1 range.
+    - normalize_steps: Normalizes step values to 0-1 range.
+    - median_mode: Use (90th, 10th, 50th, 25th) percentiles instead of (95th, 05th, 75th, 25th).
     '''  
     by_step = dta.groupby("Step", as_index=False)
-
     steps = by_step.first()["Step"].values if not normalize_steps else by_step.first()["Step"].values / by_step.first()["Step"].max()
     
     if median_mode:
@@ -58,10 +76,10 @@ def get_metrics_runs(dta, normalize_steps=False, median_mode = False):
 
 def summarize_runs(dta, normalize_steps=False, median_mode = False, **kwargs):
     '''
-    Gets fully trained performance metrics for set of runs, expects pd df{Steps, Run, Value}.
+    Gets fully trained performance metrics (mid_percentile_value, top_percentile_value, bottom_percentile_value) for set of runs, expects pd df{Steps, Run, Value}.
 
-    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25.
-    - normalize_steps: Normalizes steps to 0-1 range.
+    - normalize_steps: Normalizes step values to 0-1 range (can be ignored for this method, here due to backwards compatibility reasons).
+    - median_mode: Use (90th, 10th, 50th, 25th) percentiles instead of (95th, 05th, 75th, 25th).
     '''
     (vals_top, vals_bot, vals_mid, _, _) = get_metrics_runs(dta, normalize_steps, median_mode)
     return (vals_mid[-1], vals_top[-1], vals_bot[-1])
@@ -71,8 +89,11 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     '''
     Visualizes data for set of runs, expects pd df{Steps, Run, Value}.
 
-    - second_level_errbar: Draws second set of smaller error boxes at 0.75-0.25.
+    Draws a single line (mid percentile) with error bars (bottom, top percentiles) on a figure corresponding to a set of runs for one experiment. 
+
+    - second_level_errbar: Draws second set of smaller error boxes for second bottom percentile.
     - normalize_steps: Normalizes steps to 0-1 range.
+    - median_mode: Use (90th, 10th, 50th, 25th) percentiles instead of (95th, 05th, 75th, 25th).
     '''
     assert (fig is None) == (ax is None)
     (vals_top, vals_bot, vals_mid, vals_bot_sec, steps) = get_metrics_runs(dta, normalize_steps, median_mode)
@@ -99,10 +120,13 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
 import utils.data as udata  
 def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, **kwargs):
     '''
-    Visualizes data for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
+    Visualizes data for a set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...]. 
 
-    - limit_steps (float, float)|None: Only shows data for steps within bounds (expects absolute step numbers / float(inf))
-    - experiments_log_in_legend bool: Show corresponding entries from experiments.txt log file.
+    Draws a single figure with a line for each experiment. For line description see `analyse_runs(...)`.
+
+    - limit_steps (float, float)|None: Only display data for steps within bounds (expects absolute step numbers / float(inf))
+    - experiments_log_in_legend bool: Show corresponding entries from ./training_data/experiments.txt log file for each experiment in legend.
+    - ...paramaters of `analyse_runs(...)`
     '''
     fig, ax = plt.subplots(figsize=(20,10))
     line_handles = []
@@ -132,8 +156,11 @@ def summarize_experiments(experiments, tag, limit_steps=None, experiments_log_in
     '''
     Prints trained performance summaries for set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...].
 
+    Prints a single summary for each experiment. For summary description see `summarize_runs(...)`.
+
     - limit_steps (float, float)|None: Only shows data for steps within bounds (expects absolute step numbers / float(inf))
     - experiments_log_in_legend bool: Show corresponding entries from experiments.txt log file.
+    - ...paramaters of `summarize_runs(...)`
     '''
     for i, (folder, regex) in enumerate(experiments):
         dta, logs_num = udata.get_log_data_for_experiment(folder, regex, tag, limit_steps)        

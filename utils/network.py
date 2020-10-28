@@ -10,7 +10,16 @@ def get_network_inputs(train_input, train_output,
                         larg, opt_params,
                         test_input = None, test_output = None,
                         train_data_filters=None, test_data_filters=None, custom_name = None):
-    
+    '''
+    Prepares inputs for NDN model instance.
+
+    - Concatenates train a test data to create input_data, output_data, train_indxs, and test_indxs.
+    - Prepares run name.
+
+    Note:
+        The API of this method is this convoluted for backwards compatibility reasons.
+    '''
+
     time_str = datetime.now().strftime("%d-%m_%H-%M-%S")
     name_str = time_str + "_" + custom_name if custom_name is not None else time_str
     
@@ -39,9 +48,20 @@ def get_network(train_input, train_output,
                   train_data_filters=None, test_data_filters=None,
                   custom_name = None, 
                   seed=0):
+    '''
+    Prepares inputs for NDN model instance and then creates it. Returns both inputs and the new model instance.
 
+    Essentially just a `get_network_inputs(...)` and creation of new NDN instance.
+
+    Note:
+        The API of this method is this convoluted for backwards compatibility reasons.
+
+    '''
     # The seeds within NDN are applied only on ._build_graph which happens after weights get initialized
     # ..need to set it now -> when NDN gets created -> weight get initiated as part of ._define_network
+    # Update: Since PR #18 on NDN this is not necessary, the seeds are properly appied on model creation.
+    # .. To make sure old scripts are still 100 % reproducible I left it here as they might expect the seeds 
+    # .. to be set here and not just when a new model instance is created.
     np.random.seed(seed)
     tf.set_random_seed(seed)
         
@@ -59,6 +79,16 @@ def train_network(train_input, train_output,
                   test_input = None, test_output = None, 
                   train_data_filters=None, test_data_filters=None,
                   custom_name = None, seed=0, logdir='logs'):
+    '''
+    Prepares inputs for NDN model instance, creates it, and then trains it. Returns trained model.
+
+    Essentially just a `get_network(...)` and subsequent call to its train(...) method.
+
+    Note:
+        The API of this method is this convoluted for backwards compatibility reasons.
+
+    '''
+
     hsm, (input, output, train_indxs, test_indxs, data_filters, larg, opt_params, name_str) = get_network(
                   train_input, train_output, 
                   larg, opt_params, hsm_params, noise_dist,
@@ -77,8 +107,12 @@ def train_network(train_input, train_output,
     )
     return hsm
 
-def load_network(path, seed):
-    np.random.seed(seed)
-    tf.set_random_seed(seed)
+def load_network(path, seed=None):
+    '''
+    Loads and returns a NDN model instance.
+    '''
+    if seed is not None:
+        np.random.seed(seed)
+        tf.set_random_seed(seed)
 
     return NDN.NDN.load_model(path)
