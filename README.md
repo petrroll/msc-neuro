@@ -12,10 +12,10 @@ We were able to identify modifications that secure greater stability of the mode
 0. Hydrate submodules: `make NDN3`
 1. Build virtenv + deps: `make env-dev` (analysis dev) | `make env` (just script deps)
 2. Activate virtenv: `source ./activate`
-3. Work
-    - Run experiments: `python3 experiments/experiments_3/bs4_exp3_runner.py qsub-cpu`
-    - Run single experiment instance: `python3 ./experiments/baseline/bl1.py`
-    - Start jupyter notebook with analysis: `jupyter notebook` and navigate to `./playgrounds/`
+3. Work:
+    - Run an experiment: e.g.: `python3 experiments/experiments_3/bs4_exp3_runner.py qsub-cpu`
+    - Run a single experiment instance directly: e.g: `python3 ./experiments/baseline/bl1.py`
+    - Use jupyter notebook for results analysis: `jupyter notebook` and navigate to `./playgrounds/`
 
 > Note: If `tensorflow-gpu` is preferred, please update `requirements.txt`'s first line from `-r NDN3/requirements.txt` to `-r NDN3/requirements-gpu.txt`
 
