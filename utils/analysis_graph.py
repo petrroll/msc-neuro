@@ -118,7 +118,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     return f_line
 
 import utils.data as udata  
-def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, **kwargs):
+def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, figsize=(20, 10), **kwargs):
     '''
     Visualizes data for a set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...]. 
 
@@ -128,12 +128,12 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
     - experiments_log_in_legend bool: Show corresponding entries from ./training_data/experiments.txt log file for each experiment in legend.
     - ...paramaters of `analyse_runs(...)`
     '''
-    fig, ax = plt.subplots(figsize=(20,10))
+    fig, ax = plt.subplots(figsize=figsize)
     line_handles = []
     legend_names = []
     for i, (folder, regex) in enumerate(experiments):
         dta, logs_num = udata.get_log_data_for_experiment(folder, regex, tag, limit_steps)        
-        line_handle = analyse_runs(dta, fig=fig, ax=ax, **kwargs)
+        line_handle = analyse_runs(dta, fig=fig, ax=ax, figsize=figsize, **kwargs)
         
         line_handles.append(line_handle)
         if override_legend is None:
