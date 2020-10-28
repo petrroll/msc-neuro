@@ -120,7 +120,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
 import utils.data as udata  
 def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, figsize=(20, 10), **kwargs):
     '''
-    Visualizes data for a set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...]. 
+    Visualizes data for a set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...]. Returns figure.
 
     Draws a single figure with a line for each experiment. For line description see `analyse_runs(...)`.
 
@@ -150,7 +150,9 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
     ax.tick_params(labelleft=True, labelright=True,)
     if title: ax.set_title(title)
 
+    fig = plt.gcf()
     plt.show()
+    return fig
 
 def summarize_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, **kwargs):
     '''
