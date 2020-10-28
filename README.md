@@ -61,3 +61,10 @@ An experiment is a set of tested architectures + hyperparameters.
     - `runners.py`: Experiments execution pipeline.
 
 > Note: This is not a software engineering thesis and so the focus was not on creating a properly extensible and maintainable experiments pipeline.
+
+#### NDN3 submodule
+The `NDN3` submodule does not track master branch of the [main repo](https://github.com/NeuroTheoryUMD/NDN3) but a [`messyDevelop` branch of my own fork](https://github.com/petrroll/NDN3/tree/messyDevelop) which attempts to keep up with NeuroTheoryUMD's master with a few additional patches. The patches should be relatively simple and conflict free so you should be able to merge upstream changes in without any troubles.
+- Added correlation tracking during training to TF summaries ([PR #16](https://github.com/NeuroTheoryUMD/NDN3/pull/16), reasons for it not being merged can be found [here](https://groups.google.com/g/ndn-dev/c/SDb-UXwOnEM)).
+- Patched last partial batch handling (not merged because it breaks certain data pipelines).
+- (Possibly) Any other unmerged PRs on the NeuroTheoryUMD's master.
+
