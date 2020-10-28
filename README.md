@@ -22,18 +22,36 @@ We were able to identify modifications that secure greater stability of the mode
 ### Data
 - Uses data from [Model Constrained by Visual Hierarchy Improves Prediction of Neural Responses to Natural Scenes](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004927) paper.
 
-### Structure: 
-- `./Data/`: Used dataset.
+# Experiments pipeline: 
+An experiment is a set of tested architectures + hyperparameters.
+- Identified by `{exp}` name and `{exp_folder}` group. 
+    - Both are used throughout the whole system for scripts discovery, logs naming, ... .
+    - `{exp_folder}` is used just for name-spacing experiments, having two `{exp}s` together in one `{exp_folder}` or in separate ones has no impact on their function.
+    - `{exp}` usually in the form of `bsX_expY.py`: An experiment `Y` based on baseline `X` model.
+- Defined by `{exp}.py` script and optionally a runner (usually but not necessarily) `{exp}_runner.py`.
+- `{exp}.py` 
+    - Defines the architecture and includes all code to instantiate and train the model.
+    - Usually trains the model multiple times (see the loop) to control for random init (`repetitions`).
+    - Sometimes accepts hyperparameters as command line arguments to support testing multiple variations as part of one experiment. Each execution with a particular set of hyperparameters is called a `run`.
+    - Also defines `{name}` that shows on logs file paths. Should serve as an human interpretable identifier of both the `exp` and also the particular `run` (i.e. encode passed arguments).
+- `{exp}_runner.py`
+    - Run an experiment through executing the `{exp}.py` with all hyperparameter combinations we want to test.
+    - Execute individual runs through environment specific runners, usually in parallel (e.g. as cluster jobs).
+
+> In the thesis text `repetitions` are called runs, and `runs` are simply experiment instances. The difference in naming is an unfortunate relict of an attempt to have understandable text but also backwards compatible scripts.
+
+### Repo structure: 
+- `./Data/region{x}`: Used dataset.
 - `./experiments/`: Experiments scripts.
-    - `bsX_expY.py`: A script defining the architecture of experiment `Y` that's based on baseline `X` model.
-    - `bsX_expY_runner.py`: A runner script defining what instances (with different parameters) of respective experiment are to be tested.
+    - `{exp_folder}/{exp}.py`: A script defining the architecture of an experiment.
+    - `{exp_folder}/{exp}_runner.py`: A runner script defining what runs (with different parameters) of respective experiment are to be tested.
 - `./NDN3/`: A git submodule with the used neuroscience focused ML framework.
 - `./playgrounds/`: Jupyter notebooks containing analysis.
 - `./training_data/`: Data produced by running the experiments.
-    - `job_logs/`: Standard output and standard error of experiment runs invoked through runners.
-    - `logs/`: Tensorflow summaries gathered during experiments.
-    - `models/`: Saved NDN3 models.
-    - `experiments.txt`: A list of experiment instances names.
+    - `job_logs/{exp_folder}/{exp}/(e|o)_{repetition}.log`: Standard output and standard error of experiment runs invoked through runners.
+    - `logs/{exp_folder}x{run}/{name}__{repetition}/`: Tensorflow summaries gathered during training.
+    - `models/{exp_folder}x{run}/{name}__{repetition}.ndnmod`: NDN3 models saved at the end of training.
+    - `experiments.txt`: A list of finished `{exp_folder}/{exp}/{name}`s.
 - `./utils/`: Various helper utilities.
     - `analysis_*`: Analysis utilities.
     - `runners.py`: Experiments execution pipeline.
