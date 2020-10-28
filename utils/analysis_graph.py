@@ -109,8 +109,8 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     # ..even if they have different leghts -> too much work. Eyeball cca 50-> errbars fit.
     err_every = math.ceil(len(vals_mid)/50)
 
-    ax.set_yticks(np.arange(0, 1., 0.025))   
-    ax.yaxis.grid(True)   
+    ax.set_yticks(np.arange(0, 1., 0.02)) 
+    ax.yaxis.grid(True)     
 
     f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=8, alpha=0.75, elinewidth=2, errorevery=err_every)[0]
     if second_level_errbar: # Draws second set of error boxes at 0.75-0.25
