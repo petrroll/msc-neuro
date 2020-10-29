@@ -63,7 +63,7 @@ An experiment is a set of tested architectures + hyperparameters.
 > Note: This is not a software engineering thesis and so the focus was not on creating a properly extensible and maintainable experiments pipeline.
 
 #### NDN3 submodule
-The `NDN3` submodule does not track the master branch of the [main repo](https://github.com/NeuroTheoryUMD/NDN3) but a [`messyDevelop` branch of my own fork](https://github.com/petrroll/NDN3/tree/messyDevelop) which attempts to keep up with NeuroTheoryUMD's master with a few additional patches. The patches should be relatively simple and conflict free so it should be possible to merge upstream changes without much trouble.
+The `./NDN3` submodule tracks a [`messyDevelop` branch of my own fork](https://github.com/petrroll/NDN3/tree/messyDevelop) of the framework. It corresponds to [main repo's master](https://github.com/NeuroTheoryUMD/NDN3) with a few additional patches that have not yet been or will never be merged upstream. The patches are simple and so it should be relatively easy to keep the fork up-to-date and regularly merge in upstream changes.
 - Added correlation tracking during training to TF summaries ([PR #16](https://github.com/NeuroTheoryUMD/NDN3/pull/16), [reasons for it not being merged](https://groups.google.com/g/ndn-dev/c/SDb-UXwOnEM)).
 - Proper last partial batch handling, partial batches are ignored in upstream (not merged because it breaks certain data pipelines).
 - (Possibly) Any other unmerged PRs on the NeuroTheoryUMD's master.
