@@ -52,6 +52,19 @@ def run_env_win(exp_folder, exp, exp_args, run):
             >> {logs_folder}/o_{run}.log\
             2>> {logs_folder}/e_{run}.log")
 
+def run_env_linux(exp_folder, exp, exp_args, run):
+    '''
+    Execute experiment in pure python virtual environment on linux.
+
+    Each experiment instance is a background process.
+    Runs `./experiments/exp_folder/exp exp_args` and logs everything along the way.
+    '''
+    exp_path, logs_folder = prepare_paths(exp_folder, exp)
+    os.system(
+        f"./env/bin/python3 {exp_path}/{exp}.py {exp_args} \
+            >> {logs_folder}/o_{run}.log\
+            2>> {logs_folder}/e_{run}.log &")
+
 def run_docker_cgg(exp_folder, exp, exp_args, run):
     '''
     Execute experiment on KSVI cluster using docker-ish based system. Requires `houska/mscneuro` docker image.
@@ -76,6 +89,7 @@ def get_runner(environment):
         "qsub-cpu": run_qsub_cpu,
         "qsub-gpu": run_qsub_gpu,
         "win": run_env_win,
+        "linux": run_env_linux,
         "docker": run_docker_cgg,
     }
 
