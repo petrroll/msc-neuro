@@ -103,7 +103,49 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
 
     # Allows externally passed fix, ax so that it can be added to existing ax
     if fig is None:
-        fig, ax = plt.subplots(figsize=(20,10))
+        fig, ax = plt.subplots(figsize=figsize)
+        
+    # Ideally computes for the whole set of experiments & is uniform across all of them 
+    # ..even if they have different leghts -> too much work. Eyeball cca 50-> errbars fit.
+    err_every = math.ceil(len(vals_mid)/50)
+
+    ax.set_yticks(np.arange(0, 1., 0.02)) 
+    ax.yaxis.grid(True)     
+
+    f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=8, alpha=0.75, elinewidth=2, errorevery=err_every)[0]
+    if second_level_errbar: # Draws second set of error boxes at 0.75-0.25
+        _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=4, alpha=0.75, elinewidth=3, errorevery=err_every, c=f_line.get_color())
+    return f_line
+
+def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, figsize=None, **kwargs):
+    '''
+    Visualizes piece of static data, expects (val_top, val_bot, val_mid, val_bot_sec, number_of_epochs) as dta.
+
+    Draws a single line (mid percentile) with error bars (bottom, top percentiles) on a figure corresponding to a set of runs for one experiment. 
+
+    - second_level_errbar: Draws second set of smaller error boxes for second bottom percentile.
+    - normalize_steps: Normalizes steps to 0-1 range.
+    '''
+    assert (fig is None) == (ax is None)
+    (val_top, val_bot, val_mid, val_bot_sec, epochs) = dta
+    if limit_steps is None:
+        limit_steps = (float("-inf"), float("+inf"))
+
+    steps = range(max(0, limit_steps[0]), min(epochs, limit_steps[1]), epochs//50)
+    vals_mid = np.array([val_mid for x in steps])
+    vals_top = np.array([val_top for x in steps])
+    vals_bot = np.array([val_bot for x in steps])
+    vals_bot_sec = np.array([val_bot_sec for x in steps])
+
+    if normalize_steps:
+        steps = steps / np.max(steps)
+
+    if figsize is None:
+        figsize = (20, 10)
+
+    # Allows externally passed fix, ax so that it can be added to existing ax
+    if fig is None:
+        fig, ax = plt.subplots(figsize=figsize)
         
     # Ideally computes for the whole set of experiments & is uniform across all of them 
     # ..even if they have different leghts -> too much work. Eyeball cca 50-> errbars fit.
@@ -118,7 +160,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     return f_line
 
 import utils.data as udata  
-def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, figsize=(20, 10), **kwargs):
+def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_legend=True, override_legend=None, title=None, enable_legend = True, static_data = [], figsize=(20, 10), **kwargs):
     '''
     Visualizes data for a set of experiments, expects [(experiment_folder, experiment_TB_like_regex), ...]. Returns figure.
 
@@ -126,11 +168,18 @@ def analyse_experiments(experiments, tag, limit_steps=None, experiments_log_in_l
 
     - limit_steps (float, float)|None: Only display data for steps within bounds (expects absolute step numbers / float(inf))
     - experiments_log_in_legend bool: Show corresponding entries from ./training_data/experiments.txt log file for each experiment in legend.
+    - static_data: adds a line based on static values, expects (name_on_legend, data) format. For data format, refer to `analyse_static_data` 
     - ...paramaters of `analyse_runs(...)`
     '''
     fig, ax = plt.subplots(figsize=figsize)
     line_handles = []
     legend_names = []
+
+    for (name, dta) in static_data:
+        line_handle = analyse_static_data(dta, limit_steps, fig=fig, ax=ax, figsize=figsize, **kwargs)
+        line_handles.append(line_handle)
+        legend_names.append(name)
+
     for i, (folder, regex) in enumerate(experiments):
         dta, logs_num = udata.get_log_data_for_experiment(folder, regex, tag, limit_steps)        
         line_handle = analyse_runs(dta, fig=fig, ax=ax, figsize=figsize, **kwargs)
