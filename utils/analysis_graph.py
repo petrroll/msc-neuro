@@ -112,9 +112,11 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     ax.set_yticks(np.arange(0, 1., 0.02)) 
     ax.yaxis.grid(True)     
 
-    f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=8, alpha=0.75, elinewidth=2, errorevery=err_every)[0]
+    print(len(steps), steps[:5], steps[-5:])
+
+    f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=4, alpha=0.85, elinewidth=1, errorevery=err_every, lw=1)[0]
     if second_level_errbar: # Draws second set of error boxes at 0.75-0.25
-        _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=4, alpha=0.75, elinewidth=3, errorevery=err_every, c=f_line.get_color())
+        _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=2, alpha=0.85, elinewidth=2, errorevery=err_every, c=f_line.get_color(), lw=1)
     return f_line
 
 def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, figsize=None, **kwargs):
@@ -131,7 +133,9 @@ def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar
     if limit_steps is None:
         limit_steps = (float("-inf"), float("+inf"))
 
-    steps = range(max(0, limit_steps[0]), min(epochs, limit_steps[1]), epochs//50)
+    steps = [x for x in range(-1, epochs-1, 100) if x >= 0 and x >= limit_steps[0] and x <= limit_steps[1]]
+    print(len(steps), steps[:5], steps[-5:])
+
     vals_mid = np.array([val_mid for x in steps])
     vals_top = np.array([val_top for x in steps])
     vals_bot = np.array([val_bot for x in steps])
@@ -154,9 +158,9 @@ def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar
     ax.set_yticks(np.arange(0, 1., 0.02)) 
     ax.yaxis.grid(True)     
 
-    f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=8, alpha=0.75, elinewidth=2, errorevery=err_every)[0]
+    f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=4, alpha=0.85, elinewidth=1, errorevery=err_every, lw=1)[0]
     if second_level_errbar: # Draws second set of error boxes at 0.75-0.25
-        _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=4, alpha=0.75, elinewidth=3, errorevery=err_every, c=f_line.get_color())
+        _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=2, alpha=0.85, elinewidth=2, errorevery=err_every, c=f_line.get_color(), lw=1)
     return f_line
 
 import utils.data as udata  
