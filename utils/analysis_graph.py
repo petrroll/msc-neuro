@@ -231,5 +231,5 @@ def summarize_experiments(experiments, tag, limit_steps=None, experiments_log_in
         else:
             legend = override_legend[i]
 
-        print(f"{legend}: {tuple(map(lambda x: round(x, 2), runs_summary))}")
+        print(f"{legend}: {tuple(map(lambda x: round(x, 3), runs_summary))}")
 
