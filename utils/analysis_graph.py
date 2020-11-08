@@ -109,6 +109,13 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     # ..even if they have different leghts -> too much work. Eyeball cca 50-> errbars fit.
     err_every = math.ceil(len(vals_mid)/50)
 
+    # Print data-points for - at most - 500 positions -> otherwise if too many points close in x-axis are far in y-axis they create a thick line
+    vals_top = vals_top[0::math.ceil(len(vals_top)/500)]
+    vals_bot = vals_bot[0::math.ceil(len(vals_bot)/500)]
+    vals_mid = vals_mid[0::math.ceil(len(vals_mid)/500)]
+    vals_bot_sec = vals_bot_sec[0::math.ceil(len(vals_bot_sec)/500)]
+    steps = steps[0::math.ceil(len(steps)/500)]
+
     ax.set_yticks(np.arange(0, 1., 0.02)) 
     ax.yaxis.grid(True)     
 
