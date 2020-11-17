@@ -1,5 +1,5 @@
 # msc-neuro
-Set of scripts to facilitate experiments done as part of an [AI/ML Msc. thesis](https://github.com/petrroll/msc-thesis) at the Math and Physics Faculty of Charles University in Prague.
+Set of scripts to facilitate experiments done as part of an [AI/ML Msc. thesis (text)](https://github.com/petrroll/msc-thesis) at the Math and Physics Faculty of Charles University in Prague.
 
 ### Abstract
 Accurate models of visual system are key for understanding how our brains process visual information. In recent years, DNNs have been rapidly gaining traction in this domain. However, only few studies attempted to incorporate known anatomical properties of visual system into standard DNN architectures adapted from the general machine learning field, to improve their interpretability and performance on visual data.
