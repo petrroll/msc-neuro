@@ -2,13 +2,13 @@
 Set of scripts to facilitate experiments done as part of an [AI/ML Msc. thesis](https://github.com/petrroll/msc-thesis) at the Math and Physics Faculty of Charles University in Prague.
 
 ### Abstract
-Accurate models of visual processing are key tools for sensory neuroscience. In recent years, DNNs have been rapidly gaining traction in this domain. However, only few studies attempted to incorporate known anatomical properties of visual system in the existing DNN architectures, to improve their interpretability and performance on visual data.  
+Accurate models of visual system are key for understanding how our brains process visual information. In recent years, DNNs have been rapidly gaining traction in this domain. However, only few studies attempted to incorporate known anatomical properties of visual system into standard DNN architectures adapted from the general machine learning field, to improve their interpretability and performance on visual data.
 
-In this thesis, we optimize a recent biologically inspired deep learning architecture designed for analysis of population data recorded from mammalian primary visual cortex when presented with natural images as stimuli. We reimplement this prior modeling in existing neuroscience focused deep learning framework NDN3 and assess it in terms of stability and sensitivity to hyperparameters and architecture fine-tuning. We proceed to extend the model with components of various DNN models, analyzing novel combinations and techniques from classical computer vision deep learning, comparing their effectives against the bio-inspired components. 
+In this thesis, we optimize a recent biologically inspired deep learning architecture designed for analysis of population data recorded from mammalian primary visual cortex when presented with natural images as stimuli. We reimplement this prior modeling in existing neuroscience focused deep learning framework NDN3 and assess it in terms of stability and sensitivity to hyperparameters and architecture fine-tuning. We proceed to extend the model with components of various DNN models, analysing novel combinations and techniques from classical computer vision deep learning, comparing their effectiveness against the bio-inspired components. 
 
-We were able to identify modifications that greatly increase the stability of the model, while securing moderate improvement in overall performance. Furthermore, we document the importance of small hyperparameters adjustments versus architectural advantages that could facilitate further experiments with the examined architectures. All-new model components were contributed to the open-source NDN3 package. 
+We were able to identify modifications that greatly increase the stability of the model while securing moderate improvement in overall performance. Furthermore, we document the importance of small hyperparameters adjustments versus architectural advantages that could facilitate further experiments with the examined architectures. All-new model components were contributed to the open-source NDN3 package. 
 
-Overall, this work grounds previous bio-inspired DNN architectures in the modern NDN3 environment, identifying optimal hyper-parametrization of the model, and thus enabling efficient future development of these bio-inspired architectures.
+Overall, this work grounds previous bio-inspired DNN architectures in the modern NDN3 environment, identifying optimal hyper-parametrization of the model, and thus paving path towards future development of these bio-inspired architectures.
 
 ### Setup:
 0. Hydrate submodules: `make NDN3`
@@ -51,6 +51,7 @@ An experiment is a set of tested architectures + hyperparameters.
 - `./experiments/`: Experiments scripts.
     - `{exp_folder}/{exp}.py`: A script defining the architecture of an experiment.
     - `{exp_folder}/{exp}_runner.py`: A runner script defining which runs (with what parameters) of respective experiment are to be tested.
+    - `readme.txt`: Mapping between experiments as described in the thesis text and their implementation in this repository.
 - `./NDN3/`: A git submodule with the used neuroscience focused ML framework.
 - `./playgrounds/`: Jupyter notebooks containing analysis.
 - `./training_data/`: Data produced by running the experiments.
