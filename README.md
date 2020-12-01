@@ -53,7 +53,7 @@ An experiment is a set of tested architectures + hyperparameters.
     - `{exp_folder}/{exp}_runner.py`: A runner script defining which runs (with what parameters) of respective experiment are to be tested.
     - `readme.txt`: Mapping between experiments as described in the thesis text and their implementation in this repository.
 - `./NDN3/`: A git submodule with the used neuroscience focused ML framework.
-- `./playgrounds/`: Jupyter notebooks containing analysis.
+- `./playgrounds/`: Jupyter notebooks containing analysis / figures generation.
 - `./training_data/`: Data produced by running the experiments.
     - `job_logs/{exp_folder}/{exp}/(e|o)_{repetition}.log`: Standard output and standard error of experiment runs invoked through runners.
     - `logs/{exp_folder}x{run}/{name}__{repetition}/`: Tensorflow summaries gathered during training.
