@@ -85,7 +85,7 @@ def summarize_runs(dta, normalize_steps=False, median_mode = False, **kwargs):
     return (vals_mid[-1], vals_top[-1], vals_bot[-1])
 
 
-def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, median_mode = False, figsize=None):
+def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, median_mode = False, figsize=None, ylim=None):
     '''
     Visualizes data for set of runs, expects pd df{Steps, Run, Value}.
 
@@ -117,6 +117,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
     steps = steps[0::math.ceil(len(steps)/500)]
 
     ax.set_yticks(np.arange(0, 1., 0.02)) 
+    if ylim: ax.set_ylim(ylim)
     ax.yaxis.grid(True)     
 
     f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=4, alpha=0.85, elinewidth=1, errorevery=err_every, lw=1)[0]
@@ -124,7 +125,7 @@ def analyse_runs(dta, fig=None, ax=None, second_level_errbar=False, normalize_st
         _ = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot_sec), (vals_mid-vals_mid)], capsize=2, alpha=0.85, elinewidth=2, errorevery=err_every, c=f_line.get_color(), lw=1)
     return f_line
 
-def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, figsize=None, **kwargs):
+def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar=False, normalize_steps=False, figsize=None, ylim=None, **kwargs):
     '''
     Visualizes piece of static data, expects (val_top, val_bot, val_mid, val_bot_sec, number_of_epochs) as dta.
 
@@ -160,6 +161,7 @@ def analyse_static_data(dta, limit_steps, fig=None, ax=None, second_level_errbar
     err_every = math.ceil(len(vals_mid)/50)
 
     ax.set_yticks(np.arange(0, 1., 0.02)) 
+    if ylim: ax.set_ylim(ylim)
     ax.yaxis.grid(True)     
 
     f_line = ax.errorbar(steps, vals_mid, yerr=[(vals_mid-vals_bot), (vals_top-vals_mid)], capsize=4, alpha=0.85, elinewidth=1, errorevery=err_every, lw=1)[0]
